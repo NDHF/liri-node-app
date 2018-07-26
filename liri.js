@@ -1,9 +1,8 @@
-require("dotenv").config();
+var fileSystemModule = require("fs");
 
-// Include the request npm package (Don't forget to run "npm install request" in this folder first!)
 var request = require("request");
 
-// Then run a request to the OMDB API with the movie specified
+require("dotenv").config();
 
 function moviethis(title) {
 
@@ -13,12 +12,8 @@ function moviethis(title) {
 
     request("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
 
-        // If the request is successful (i.e. if the response status code is 200)
         if (!error && response.statusCode === 200) {
 
-            // Parse the body of the site and recover just the imdbRating
-            // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-            //console.log(JSON.parse(body));
             console.log("Title: " + JSON.parse(body).Title);
             console.log("Year: " + JSON.parse(body).Year);
             console.log("IMDb Rating: " + JSON.parse(body).imdbRating);
@@ -61,12 +56,25 @@ function radioOnTheInternet(song) {
     })
 };
 
-function hearMeOLiri(theFunction) {
+function doWhatItSays() {
+    fileSystemModule.readFile("random.txt", "utf8", function(err, data) {
+        if (err) {
+            return console.log(err);
+        } else {
+            var dataArr = data.split(",");
+            hearMeOLiri(dataArr[0], dataArr[1]);
+        }
+}
+    )};
+
+function hearMeOLiri(theFunction, theThing) {
     if (theFunction === "movie-this") {
-        moviethis(process.argv[3]);
+        moviethis(theThing);
     } else if (theFunction === "spotify-this-song") {
-        radioOnTheInternet(process.argv[3]);
+        radioOnTheInternet(theThing);
+    } else if (theFunction === "do-what-it-says") {
+        doWhatItSays();
     }
 };
 
-hearMeOLiri(process.argv[2]);
+hearMeOLiri(process.argv[2], process.argv[3]);
