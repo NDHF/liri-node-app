@@ -67,7 +67,19 @@ function doWhatItSays() {
 }
     )};
 
+function writeCommandToFile(command, separator, parameter) {
+    var toBeWritten = command.concat(separator, parameter);
+    fileSystemModule.appendFile("log.txt", toBeWritten, function(err) {
+        if (err) {
+        return console.log(err);
+        }
+        return console.log("write completed successfully");
+    });
+    
+}
+
 function hearMeOLiri(theFunction, theThing) {
+    writeCommandToFile(theFunction, ",", theThing);
     if (theFunction === "movie-this") {
         moviethis(theThing);
     } else if (theFunction === "spotify-this-song") {
