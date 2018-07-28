@@ -2,7 +2,11 @@ var fileSystemModule = require("fs");
 
 var request = require("request");
 
+var fetch = require("node-fetch");
+
 require("dotenv").config();
+
+const keys = require('./keys.js');
 
 function moviethis(title) {
 
@@ -36,7 +40,6 @@ function radioOnTheInternet(song) {
     }
 
     require("dotenv").config();
-    const keys = require('./keys.js');
     var Spotify = require('node-spotify-api');
     var spotify = new Spotify(keys.spotify);
 
@@ -57,33 +60,53 @@ function radioOnTheInternet(song) {
 };
 
 function doWhatItSays() {
-    fileSystemModule.readFile("random.txt", "utf8", function(err, data) {
+    fileSystemModule.readFile("random.txt", "utf8", function (err, data) {
         if (err) {
             return console.log(err);
         } else {
             var dataArr = data.split(",");
             hearMeOLiri(dataArr[0], dataArr[1]);
         }
+    })
+};
+
+//request("http://www.omdbapi.com/?t=" + title + "&y=&plot=short&apikey=trilogy", function (error, response, body)
+
+function newsOfTheWorld() {
+    const newsapi = keys.newsAPI.apiKey;
+    var url = 'https://newsapi.org/v2/top-headlines?' +
+        'sources=bbc-news&' +
+        'apiKey=' + newsapi;
+    console.log(url);
+    request(url, function (error, response, body) {
+        for (var i = 0; i < 5; i++) {
+            console.log(JSON.parse(body).articles[i].title);
+            console.log(JSON.parse(body).articles[i].author);
+            console.log(JSON.parse(body).articles[i].url);
+            console.log(JSON.parse(body).articles[i].publishedAt);
+            console.log("===========");
+        }
+    });
 }
-    )};
 
 function writeCommandToFile(command, separator, parameter) {
     var toBeWritten = command.concat(separator, parameter);
-    fileSystemModule.appendFile("log.txt", toBeWritten, function(err) {
+    fileSystemModule.appendFile("log.txt", toBeWritten, function (err) {
         if (err) {
-        return console.log(err);
+            return console.log(err);
         }
         return console.log("write completed successfully");
     });
-    
 }
 
-function hearMeOLiri(theFunction, theThing) {
-    writeCommandToFile(theFunction, ",", theThing);
+function hearMeOLiri(theFunction, userInput) {
+    writeCommandToFile(theFunction, ",", userInput);
     if (theFunction === "movie-this") {
-        moviethis(theThing);
+        moviethis(userInput);
     } else if (theFunction === "spotify-this-song") {
-        radioOnTheInternet(theThing);
+        radioOnTheInternet(userInput);
+    } else if (theFunction === "my-news") {
+        newsOfTheWorld();
     } else if (theFunction === "do-what-it-says") {
         doWhatItSays();
     }

@@ -7,6 +7,8 @@
     "dotenv": "^6.0.0",
     "keys": "^0.1.2",
     "keys.js": "^1.0.2",
+    "newsapi": "^2.2.2",
+    "node-fetch": "^2.2.0",
     "node-spotify-api": "^1.0.7",
     "omdb": "^0.8.0",
     "request": "^2.87.0",
